@@ -177,36 +177,62 @@ body {
 /* --- 6. ABOUT PAGE (info.html) --- */
 .about-container {
     margin-top: 150px;
+    margin-bottom: 40px;
     display: flex;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
     padding: 0 40px;
     gap: 80px;
-    /* align-items: flex-start removed — default "stretch" makes both columns match the taller one's height */
+    height: calc(100vh - 190px); /* fits the pane below the fixed nav so it doesn't grow the page */
 }
  
-.about-image { flex: 0 0 40%; } /* 40% Width as requested */
+.about-image { flex: 0 0 40%; height: 100%; } /* 40% Width as requested, pinned to the pane height */
 .about-text {
     flex: 0 0 60%;
     display: flex;
     flex-direction: column;
-}  
+    height: 100%;
+    overflow-y: auto; /* right column scrolls independently */
+    padding-right: 16px; /* keeps text clear of the scrollbar */
+}
+
+/* Subtle, on-brand scrollbar for the right column */
+.about-text {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.25) transparent;
+}
+.about-text::-webkit-scrollbar { width: 6px; }
+.about-text::-webkit-scrollbar-track { background: transparent; }
+.about-text::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.25);
+    border-radius: 3px;
+}
  
 .about-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover; /* fills the pinned column height, cropping slightly rather than distorting */
     display: block;
     filter: grayscale(15%);
 }
  
 .bio-copy {
-    margin-top: auto; /* absorbs the leftover vertical space above it, pushing it to the bottom */
+    margin-top: 0; /* was "auto" — that pushed the bio down to soak up leftover space in the pane */
+}
+
+.bio-extra {
+    padding-top: 6px;
 }
  
 .about-video-link {
     display: block;
     cursor: pointer;
+}
+
+.video-links {
+    margin-top: 8px;
+    margin-bottom: 10px;
 }
  
 .about-video-frame {
@@ -224,7 +250,7 @@ body {
 .about-text p {
     font-size: 1.1rem;
     line-height: 1.7;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     font-weight: 300;
 }
  
@@ -240,7 +266,7 @@ body {
 .contact-info a {
     display: inline-block;
     margin-right: 25px;
-    margin-top: 10px;
+    margin-top: 4px;
     text-decoration: none;
     color: #000;
     font-weight: 600;
@@ -262,8 +288,15 @@ body {
         margin-top: 100px;
         gap: 40px;
         padding: 0 20px;
+        height: auto; /* let the stacked layout grow with the page instead of scrolling internally */
     }
-    .about-image, .about-text { flex: 0 0 100%; }
+    .about-image, .about-text {
+        flex: 0 0 100%;
+        height: auto;
+        overflow-y: visible;
+        padding-right: 0;
+    }
+    .about-image img { height: auto; object-fit: unset; } /* show the full portrait, uncropped, when stacked */
     
     .work-row { grid-template-columns: 60px 1fr; }
     .splash-title { font-size: 2.5rem; }
